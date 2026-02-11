@@ -4,7 +4,7 @@ import { Menu } from "@tauri-apps/api/menu";
 import { TrayIcon } from "@tauri-apps/api/tray";
 import { getCurrentWindow } from "@tauri-apps/api/window";
 import { disable, enable, isEnabled } from "@tauri-apps/plugin-autostart";
-import { register, unregisterAll } from "@tauri-apps/plugin-global-shortcut";
+import { register, unregister, unregisterAll } from "@tauri-apps/plugin-global-shortcut";
 
 import { INPUT_LABELS, MAX_HOTKEY_PROFILES } from "./constants";
 import {
@@ -25,6 +25,7 @@ export class AppController {
   private trayIcon: TrayIcon | null = null;
   private trayReady = false;
   private domListenersAttached = false;
+  private registeredHotkeys: string[] = [];
   private readonly state: RuntimeState = createInitialRuntimeState();
 
   async bootstrap(): Promise<void> {
@@ -114,17 +115,39 @@ export class AppController {
   }
 
   private async registerProfileHotkeys(): Promise<void> {
-    await unregisterAll();
+    // Some environments can block unregister_all via ACL. Fallback to per-shortcut unregister.
+    try {
+      await unregisterAll();
+      this.registeredHotkeys = [];
+    } catch {
+      if (this.registeredHotkeys.length > 0) {
+        try {
+          await unregister(this.registeredHotkeys);
+        } catch {
+          // Keep running even if cleanup fails.
+        }
+      }
+      this.registeredHotkeys = [];
+    }
 
     const slots = Math.min(this.state.config.profiles.length, MAX_HOTKEY_PROFILES);
     for (let index = 0; index < slots; index += 1) {
       const shortcut = `Ctrl+Alt+Shift+${index + 1}`;
-      await register(shortcut, async (event) => {
-        if (event.state !== "Pressed") {
-          return;
+      try {
+        await register(shortcut, async (event) => {
+          if (event.state !== "Pressed") {
+            return;
+          }
+          await this.activateProfileByIndex(index);
+        });
+        this.registeredHotkeys.push(shortcut);
+      } catch (error) {
+        const message = String(error).toLowerCase();
+        if (!message.includes("already") && !message.includes("registered")) {
+          throw error;
         }
-        await this.activateProfileByIndex(index);
-      });
+        this.registeredHotkeys.push(shortcut);
+      }
     }
   }
 
@@ -238,7 +261,17 @@ export class AppController {
   private async quit(): Promise<void> {
     this.state.allowClose = true;
     await this.stopListener();
-    await unregisterAll();
+    try {
+      await unregisterAll();
+    } catch {
+      if (this.registeredHotkeys.length > 0) {
+        try {
+          await unregister(this.registeredHotkeys);
+        } catch {
+          // ignore
+        }
+      }
+    }
     await this.appWindow.close();
   }
 
