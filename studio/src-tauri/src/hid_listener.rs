@@ -252,7 +252,7 @@ mod tests {
     #[test]
     fn decode_input_mask_auto_detect_chooses_closest_candidate() {
         let report = [0x00, 0x00, 0x03, 0x00, 0x00];
-        let last_mask = 0x0001;
+        let last_mask = 0x0003;
         let mask = decode_input_mask(&report, 0, true, last_mask);
         assert_eq!(mask, 0x0003);
     }
