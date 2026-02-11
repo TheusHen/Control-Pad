@@ -15,19 +15,19 @@ Joystick_ g_gamepad(
     JOYSTICK_DEFAULT_REPORT_ID,
     JOYSTICK_TYPE_GAMEPAD,
     kInputCount,
-    0,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false);
+    0,     // hat switches
+    false, // x axis
+    false, // y axis
+    false, // z axis
+    false, // rx axis
+    false, // ry axis
+    false, // rz axis
+    false, // rudder
+    false, // throttle
+    false, // accelerator
+    false, // brake
+    false  // steering
+);
 
 uint32_t g_next_scan_ms = 0;
 uint32_t g_last_report_ms = 0;
