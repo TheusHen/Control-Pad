@@ -84,7 +84,26 @@ Designed with:
 
 # Firmware
 
-## TODO :(
+Firmware implemented in `firmware/` (C++, PlatformIO, ATmega32U4):
+
+* HID Gamepad output for 15 inputs
+* Debounced input scanning
+* Mapping:
+  * `EMERGENCY = 0`
+  * `RB1..RB4 = 1..4`
+  * `TOGGLE1..TOGGLE10 = 5..14`
+
+
+## `studio/`
+
+Implemented with Tauri + TypeScript (Windows-focused):
+
+* Captures HID directly
+* Per-input configurable actions (`none`, `key combo`, `command`)
+* Profile system with active profile switching
+* Profile hotkeys: `Ctrl + Alt + Shift + 1..9`
+* Tray icon workflow and background behavior
+* Autostart support and local config persistence on PC
 
 ---
 

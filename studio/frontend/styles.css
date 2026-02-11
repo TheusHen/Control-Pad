@@ -1,0 +1,258 @@
+﻿:root {
+  --bg: #eef2f4;
+  --panel: #ffffff;
+  --panel-strong: #f8fbfc;
+  --text: #12222e;
+  --muted: #4f6677;
+  --line: #d5dee4;
+  --primary: #145b7d;
+  --primary-strong: #0f4761;
+  --success: #2a7348;
+  --danger: #8a2a2a;
+  font-family: "Segoe UI", "Trebuchet MS", Tahoma, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background: radial-gradient(circle at top right, #d6e8f2, var(--bg) 45%);
+  color: var(--text);
+  min-height: 100%;
+}
+
+#app {
+  min-height: 100vh;
+  padding: 20px;
+}
+
+.layout {
+  display: grid;
+  gap: 14px;
+  max-width: 1320px;
+  margin: 0 auto;
+}
+
+.hero {
+  background: linear-gradient(145deg, #103b52, #1f647f);
+  border: 1px solid #0e516d;
+  color: #ecf8ff;
+  border-radius: 14px;
+  padding: 18px 22px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 14px;
+}
+
+.hero h1 {
+  margin: 0;
+  font-size: 1.45rem;
+  letter-spacing: 0.03em;
+}
+
+.hero p {
+  margin: 6px 0 0;
+  color: #b8d9ea;
+}
+
+.status-box {
+  display: grid;
+  gap: 6px;
+  text-align: right;
+  min-width: 260px;
+}
+
+.status-pill {
+  border-radius: 999px;
+  padding: 5px 12px;
+  font-size: 0.8rem;
+  justify-self: end;
+  border: 1px solid #ffffff44;
+  background: #ffffff18;
+}
+
+.status-pill.running {
+  background: #2a7348;
+  border-color: #205c39;
+}
+
+.status-pill.stopped {
+  background: #8a2a2a;
+  border-color: #6e2121;
+}
+
+.card {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 14px 16px;
+  box-shadow: 0 8px 24px #0000000f;
+}
+
+.card h2 {
+  margin: 0 0 10px;
+  font-size: 1.05rem;
+}
+
+.row-grid {
+  display: grid;
+  grid-template-columns: 1fr auto auto auto;
+  gap: 10px;
+  align-items: end;
+}
+
+.row-grid.compact {
+  margin-top: 10px;
+  grid-template-columns: repeat(3, minmax(170px, 220px));
+  align-items: center;
+}
+
+.field {
+  display: grid;
+  gap: 6px;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.field.grow {
+  min-width: 0;
+}
+
+.field.checkbox {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.9rem;
+}
+
+select,
+input,
+button {
+  border: 1px solid #b9c9d3;
+  background: #ffffff;
+  color: var(--text);
+  border-radius: 9px;
+  padding: 8px 10px;
+  font-size: 0.92rem;
+}
+
+select:focus,
+input:focus {
+  outline: 2px solid #8bc5e6;
+  border-color: #4f99c2;
+}
+
+button {
+  cursor: pointer;
+  font-weight: 600;
+}
+
+button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.btn-primary {
+  background: var(--primary);
+  border-color: var(--primary-strong);
+  color: #ffffff;
+}
+
+.btn-primary:hover {
+  background: var(--primary-strong);
+}
+
+.btn-secondary {
+  background: var(--panel-strong);
+  border-color: #b8c8d2;
+}
+
+.btn-secondary:hover {
+  background: #edf3f6;
+}
+
+.hint {
+  margin: 9px 0 0;
+  color: var(--muted);
+  font-size: 0.88rem;
+}
+
+.table-wrap {
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  overflow: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 970px;
+}
+
+th,
+td {
+  border-bottom: 1px solid #e6edf1;
+  padding: 7px 8px;
+  text-align: left;
+  vertical-align: middle;
+  font-size: 0.9rem;
+}
+
+thead th {
+  background: #f0f6f9;
+  color: #29485b;
+  font-weight: 700;
+}
+
+tbody tr:nth-child(even) {
+  background: #fbfdfe;
+}
+
+.input-name {
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.input-id {
+  color: #6a7f8d;
+  font-size: 0.78rem;
+}
+
+#live-state {
+  margin: 0;
+  font-family: Consolas, "Courier New", monospace;
+  background: #f2f8fa;
+  border: 1px solid #d4e2e8;
+  border-radius: 8px;
+  padding: 9px 10px;
+  color: #184961;
+}
+
+@media (max-width: 1100px) {
+  .row-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .row-grid.compact {
+    grid-template-columns: 1fr;
+  }
+
+  .hero {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .status-box {
+    text-align: left;
+    min-width: 0;
+  }
+
+  .status-pill {
+    justify-self: start;
+  }
+}
