@@ -67,6 +67,10 @@ body {
   min-width: 260px;
 }
 
+.status-actions {
+  justify-self: end;
+}
+
 .status-pill {
   border-radius: 999px;
   padding: 5px 12px;
@@ -176,6 +180,16 @@ button:disabled {
   background: #edf3f6;
 }
 
+.btn-danger {
+  background: #8a2a2a;
+  border-color: #6e2121;
+  color: #ffffff;
+}
+
+.btn-danger:hover {
+  background: #6e2121;
+}
+
 .hint {
   margin: 9px 0 0;
   color: var(--muted);
@@ -253,6 +267,10 @@ tbody tr:nth-child(even) {
   }
 
   .status-pill {
+    justify-self: start;
+  }
+
+  .status-actions {
     justify-self: start;
   }
 }

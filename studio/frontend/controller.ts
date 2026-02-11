@@ -219,6 +219,16 @@ export class AppController {
         return;
       }
 
+      const shouldExit = window.confirm(
+        "Close Control Pad Studio?\n\nOK = Exit application\nCancel = Minimize to tray",
+      );
+      if (shouldExit) {
+        this.state.allowClose = true;
+        await this.stopListener();
+        await unregisterAll();
+        return;
+      }
+
       event.preventDefault();
       await this.appWindow.hide();
       this.setStatus("Running in tray. Use tray icon to reopen.");
@@ -294,6 +304,11 @@ export class AppController {
       } catch (error) {
         this.setStatus(`Failed to save config: ${String(error)}`);
       }
+      return;
+    }
+
+    if (target.id === "quit-app") {
+      await this.quit();
       return;
     }
 

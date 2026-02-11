@@ -99,6 +99,9 @@ export function renderApp(state: RuntimeState): void {
             ${state.listenerRunning ? "Listener Running" : "Listener Stopped"}
           </span>
           <div id="status-message">${escapeHtml(state.statusMessage)}</div>
+          <div class="status-actions">
+            <button id="quit-app" class="btn-danger">Exit App</button>
+          </div>
         </div>
       </header>
 
