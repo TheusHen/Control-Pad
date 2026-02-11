@@ -116,3 +116,8 @@ void loop() {
 }
 
 } // namespace control_pad
+
+// Arduino core entry points.
+void setup() { control_pad::setup(); }
+
+void loop() { control_pad::loop(); }
