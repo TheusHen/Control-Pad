@@ -23,22 +23,38 @@ import { getInputIdFromDataset, renderApp, updateLiveState, updateStatus } from 
 export class AppController {
   private readonly appWindow = getCurrentWindow();
   private trayIcon: TrayIcon | null = null;
+  private trayReady = false;
+  private domListenersAttached = false;
   private readonly state: RuntimeState = createInitialRuntimeState();
 
   async bootstrap(): Promise<void> {
-    await this.initWindowBehavior();
-    await this.setupTray();
-    await this.attachRuntimeListeners();
-    await this.loadConfig();
-    await this.refreshDevices();
-    await this.refreshListenerStatus();
-    await this.registerProfileHotkeys();
-
+    // Always render a first frame so initialization errors do not leave a blank screen.
     this.render();
     this.attachDomListeners();
 
+    await this.safeStep("window init", () => this.initWindowBehavior());
+    await this.safeStep("event listeners", () => this.attachRuntimeListeners());
+    await this.loadConfig();
+    await this.refreshDevices();
+    await this.refreshListenerStatus();
+
+    this.trayReady = await this.safeStep("tray setup", () => this.setupTray());
+    await this.safeStep("global shortcuts", () => this.registerProfileHotkeys());
+
+    this.render();
+
     if (this.state.config.selectedDevicePath && !this.state.listenerRunning) {
       await this.startListener();
+    }
+  }
+
+  private async safeStep(step: string, action: () => Promise<void>): Promise<boolean> {
+    try {
+      await action();
+      return true;
+    } catch (error) {
+      this.setStatus(`${step} failed: ${String(error)}`);
+      return false;
     }
   }
 
@@ -197,6 +213,12 @@ export class AppController {
       if (this.state.allowClose) {
         return;
       }
+
+      // If tray is not available, allow normal close so the app never gets stuck.
+      if (!this.trayReady) {
+        return;
+      }
+
       event.preventDefault();
       await this.appWindow.hide();
       this.setStatus("Running in tray. Use tray icon to reopen.");
@@ -222,6 +244,10 @@ export class AppController {
   }
 
   private attachDomListeners(): void {
+    if (this.domListenersAttached) {
+      return;
+    }
+
     const app = document.querySelector<HTMLElement>("#app");
     if (!app) {
       return;
@@ -236,6 +262,8 @@ export class AppController {
     app.addEventListener("input", (event) => {
       this.onInput(event);
     });
+
+    this.domListenersAttached = true;
   }
 
   private async onClick(event: MouseEvent): Promise<void> {

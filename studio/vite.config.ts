@@ -5,6 +5,8 @@ const host = process.env.TAURI_DEV_HOST;
 
 // https://vite.dev/config/
 export default defineConfig(async () => ({
+  // Required for Tauri bundled app (file://) so assets resolve relatively.
+  base: "./",
 
   // Vite options tailored for Tauri development and only applied in `tauri dev` or `tauri build`
   //
