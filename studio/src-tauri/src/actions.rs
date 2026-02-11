@@ -45,7 +45,7 @@ fn send_windows_key_combo(combo: &str) -> Result<(), String> {
                 if special.contains(c) {
                     main_key = format!("{{{c}}}");
                 } else {
-                    main_key = token;
+                    main_key = token.to_string();
                 }
             }
             _ => {}

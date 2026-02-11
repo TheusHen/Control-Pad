@@ -5,7 +5,7 @@ mod hid_listener;
 mod models;
 mod state;
 
-use tauri::State;
+use tauri::{Manager, State};
 
 use crate::config_store::load_config;
 use crate::hid_listener::start_listener_internal;
